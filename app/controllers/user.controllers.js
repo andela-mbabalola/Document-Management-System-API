@@ -1,6 +1,8 @@
 var User = require('./../models/user.models.js'),
   Role = require('./../models/role.models.js'),
   db = require('./../../config/database'),
+  config = require('./../../config/config'),
+  jwt = require('jsonwebtoken'),
   helpers = require('./../helpers/helper');
 
 /**
@@ -11,7 +13,7 @@ var User = require('./../models/user.models.js'),
  */
 exports.login = function(req, res) {
   User.findOne({
-    userName: req.body.userName
+    userName : req.body.userName,
   }, function(err, user) {
     if (err) {
       res.send(err);
@@ -24,12 +26,7 @@ exports.login = function(req, res) {
       } else if (user) {
         //check if password matches
 
-        if (helpers.comparePassword(user.password, req.body.password)) {
-          res.json({
-            success: false,
-            message: 'Authentication failed. Wrong password'
-          });
-        } else {
+        if (helpers.comparePassword(req.body.password, user.password)) {
           //if user was found and password matches
           //create a token
           var token = jwt.sign(user, config.secret, {
@@ -38,9 +35,15 @@ exports.login = function(req, res) {
 
           res.json({
             success: true,
-            message: 'Token successfully generated',
+            message: 'Successfully logged in',
             token: token
           });
+        } else {
+          res.json({
+            success: false,
+            message: 'Authentication failed. Wrong password'
+          });
+
         }
       }
     }

@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
   methodOverride = require('method-override'),
   jwt = require('jsonwebtoken'),
   config = require('./config'),
-  routes = require('./app/routes/index'),
+  routes = require('./../app/routes/index'),
   db = require('./database');
 
 routes(router);

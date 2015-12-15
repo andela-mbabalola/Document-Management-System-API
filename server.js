@@ -1,7 +1,6 @@
-var app = require('./app/config/appConfig'),
+var app = require('./config/appConfig'),
   mongoose = require('mongoose'),
-  db = require('./app/config/database'),
-  app = require('./app/config/appConfig'),
+  db = require('./config/database');
 
   port = process.env.PORT || 4444;
 
@@ -9,5 +8,7 @@ var app = require('./app/config/appConfig'),
 // configuration ===============================================================
 mongoose.connect(db.url); // connect to database
 
-app.listen(port);
+ app.listen(port);
 console.log("Successfully connected to port " + port);
+
+module.exports = app;
