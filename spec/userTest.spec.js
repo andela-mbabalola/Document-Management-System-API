@@ -160,6 +160,73 @@ describe("Users", function() {
     });
 
   });
+  describe("/GET: Get all users", function() {
+    var userId,
+      userToken;
+    before(function(done) {
+      var testRole = new role(_roleSeeders[2]);
+      testRole.save();
+      _userSeeders[2].role = testRole._id;
+      var testUser = new user(_userSeeders[2]);
+      testUser.save();
+      console.log("created!");
+      userId = testUser._id;
+      userToken = jwt.sign(testUser, config.secret, {
+        expiresInMinutes: 1440
+      });
+      done();
+      console.log(testUser);
+    });
+    after(function(done) {
+      user.remove({}, function() {
+        role.remove({}, function() {
+          done();
+        });
+      });
+    });
+
+    it("should return a user when id is specified", function(done) {
+      console.log(userId);
+      request.get("/api/users/" + userId)
+        .set("x-access-token", userToken)
+        .expect(200)
+        .end(function(err, res) {
+          // console.log(res);
+          // expect(res.body).toEqual(jasmine.objectContaining({
+          //   userName : "Bolu",
+          //   email : "bolu@gmail.com"
+          // }));
+          expect(res.body.success).to.eql(true);
+          done();
+        });
+    });
+
+    it("returns all the available users in the database", function(done) {
+
+      var testRoleTwo = new role(_roleSeeders[1]);
+      testRoleTwo.save();
+      _userSeeders[1].role = testRoleTwo._id;
+      var testUserTwo = new user(_userSeeders[1]);
+      testUserTwo.save();
+      request.get("/api/users/")
+        .set("x-access-token", userToken)
+        .expect(200)
+        .end(function(err, res) {
+          console.log(res.body);
+          // expect((res.body)[0]).toEqual(jasmine.objectContaining({
+          //   userName: "Bolu",
+          //   email: "bolu@gmail.com"
+          // }));
+          // expect((res.body)[1]).toEqual(jasmine.objectContaining({
+          //   userName: "Emmy",
+          //   email: "emma@gmail.com"
+          // }));
+          expect(res.body.success).to.eql(true);
+          expect(res.body.length).to.not.be(0);
+          done();
+        });
+    });
+  });
 
 
 });
