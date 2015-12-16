@@ -1,6 +1,6 @@
-var User = require('./../models/user.models.js'),
-  Role = require('./../models/role.models.js'),
-  Document = require('./../models/document.models.js');
+var User = require("./../models/user.models.js"),
+  Role = require("./../models/role.models.js"),
+  Documents = require("./../models/document.models.js");
 
 /**
  * [function description]
@@ -33,7 +33,7 @@ exports.createDocument = function(req, res) {
                 message: "User does not exist. Create first"
               });
             } else {
-              var newDoc = new Document({
+              var newDoc = new Documents({
                 title: req.body.title,
                 content: req.body.content,
                 ownerId: user.id,
@@ -64,7 +64,7 @@ exports.createDocument = function(req, res) {
  * @return {[type]}     [description]
  */
 exports.getAllDocument = function(req, res) {
-  Document.find({}, function(err, docs) {
+  Documents.find({}, function(err, docs) {
     if (err) {
       res.send(err);
     } else {
@@ -87,7 +87,7 @@ exports.getAllDocument = function(req, res) {
  * @return {[type]}     [description]
  */
 exports.getADocument = function(req, res) {
-  Document.findById(req.params.id, function(err, doc) {
+  Documents.findById(req.params.id, function(err, doc) {
     if (err) {
       res.send(err);
     } else {
@@ -121,7 +121,7 @@ exports.editDocument = function(req, res) {
           res.json("User does not exist");
         } else {
           req.body.userName = user;
-          Document.findByIdAndUpdate(
+          Documents.findByIdAndUpdate(
             req.params.id, req.body,
             function(err, document) {
               if (err) {
@@ -150,7 +150,7 @@ exports.editDocument = function(req, res) {
  * @return {[type]}     [description]
  */
 exports.deleteDocument = function(req, res) {
-  Document.findById(req.params.id).remove(function(err, document) {
+  Documents.findById(req.params.id).remove(function(err, document) {
     if (err) {
       res.send(err);
     } else if (!document) {
