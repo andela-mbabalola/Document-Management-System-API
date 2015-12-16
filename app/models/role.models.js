@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-RoleSchema = new Schema({
+var RoleSchema = new Schema({
   title: {
     type: String,
     required: true,
