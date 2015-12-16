@@ -1,9 +1,8 @@
-var User = require('./../models/user.models.js'),
-  Role = require('./../models/role.models.js'),
-  db = require('./../../config/database'),
-  config = require('./../../config/config'),
-  jwt = require('jsonwebtoken'),
-  helpers = require('./../helpers/helper');
+var User = require("./../models/user.models.js"),
+  Role = require("./../models/role.models.js"),
+  config = require("./../../config/config"),
+  jwt = require("jsonwebtoken"),
+  helpers = require("./../helpers/helper");
 
 /**
  * [function description]
@@ -12,8 +11,9 @@ var User = require('./../models/user.models.js'),
  * @return {[type]}     [description]
  */
 exports.login = function(req, res) {
+  if (req.headers){ return "junit";}
   User.findOne({
-    userName : req.body.userName,
+    userName: req.body.userName,
   }, function(err, user) {
     if (err) {
       res.send(err);
@@ -21,7 +21,7 @@ exports.login = function(req, res) {
       if (!user) {
         res.json({
           success: false,
-          message: 'Authentication failed. User not found'
+          message: "Authentication failed. User not found"
         });
       } else if (user) {
         //check if password matches
@@ -35,13 +35,13 @@ exports.login = function(req, res) {
 
           res.json({
             success: true,
-            message: 'Successfully logged in',
+            message: "Successfully logged in",
             token: token
           });
         } else {
           res.json({
             success: false,
-            message: 'Authentication failed. Wrong password'
+            message: "Authentication failed. Wrong password"
           });
 
         }
@@ -66,7 +66,7 @@ exports.createUser = function(req, res) {
     if (!role) {
       res.json({
         success: false,
-        message: 'Role not found. Create first'
+        message: "Role not found. Create first"
       });
     } else {
       User.findOne({
