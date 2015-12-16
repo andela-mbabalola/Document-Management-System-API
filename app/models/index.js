@@ -1,8 +1,7 @@
-var mongoose = require('mongoose'),
-  Role = require('./role.models'),
+var Role = require('./role.models'),
   User = require('./user.models'),
-  Document = require('./document.models');
+  Documents = require('./document.models');
 
 exports.Role = Role;
 exports.User = User;
-exports.Document = Document;
+exports.Documents = Documents;
