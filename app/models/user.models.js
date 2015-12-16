@@ -1,5 +1,4 @@
 var mongoose = require("mongoose"),
-  Role = require("./role.models"),
   bcrypt = require("bcrypt"),
   SALT_WORK_FACTOR = 10,
   Schema = mongoose.Schema,
@@ -14,7 +13,7 @@ User = new Schema({
         validator: function(name) {
           return /[a-zA-Z]/.test(name);
         },
-        message: '{VALUE} is not a valid name!'
+        message: "{VALUE} is not a valid name!"
       }
     },
 
@@ -25,7 +24,7 @@ User = new Schema({
         validator: function(name) {
           return /[a-zA-Z]/.test(name);
         },
-        message: '{VALUE} is not a valid name!'
+        message: "{VALUE} is not a valid name!"
       }
     }
   },
@@ -38,7 +37,7 @@ User = new Schema({
       validator: function(name) {
         return /\w/.test(name);
       },
-      message: '{VALUE} is not a valid userName!'
+      message: "{VALUE} is not a valid userName!"
     }
   },
 
@@ -50,7 +49,7 @@ User = new Schema({
       validator: function(password) {
         return /\w/.test(password);
       },
-      message: '{VALUE} is not a valid password!'
+      message: "{VALUE} is not a valid password!"
     }
   },
 
@@ -61,13 +60,13 @@ User = new Schema({
       validator: function(email) {
         return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(email);
       },
-      message: '{VALUE} is not a valid email!'
+      message: "{VALUE} is not a valid email!"
     }
   },
 
   role: [{
     type: ObjectId,
-    ref: 'Role',
+    ref: "Role",
     required: true
   }],
 
@@ -83,19 +82,25 @@ User = new Schema({
 });
 
 // Bcrypt middleware on UserSchema
-User.pre('save', function(next) {
+User.pre("save", function(next) {
   var user = this;
 
   // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) return next();
+  if (!user.isModified("password")) {
+    return next();
+  }
 
   // generate a salt
   bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-    if (err) return next(err);
+    if (err) {
+      return next(err);
+    }
 
     // hash the password using our new salt
     bcrypt.hash(user.password, salt, function(err, hash) {
-      if (err) return next(err);
+      if (err) {
+        return next(err);
+      }
 
       // override the cleartext password with the hashed one
       user.password = hash;
@@ -106,12 +111,14 @@ User.pre('save', function(next) {
 
 User.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-    if (err) return cb(err);
+    if (err) {
+      return cb(err);
+    }
     cb(null, isMatch);
   });
 };
 
 
-var User = mongoose.model('User', User);
+var User = mongoose.model("User", User);
 module.exports = User;
 // exports.User = User;
