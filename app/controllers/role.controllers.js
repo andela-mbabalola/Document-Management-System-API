@@ -1,7 +1,4 @@
-var Role = require('./../models/role.models'),
-  config = require('./../../config/config'),
-  adminConfig = require('./../../config/adminConfig'),
-  db = require('./../../config/database');
+var Role = require("./../models/role.models");
 
 /**
  * [function description]
