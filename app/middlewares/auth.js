@@ -1,7 +1,6 @@
-var config = require('./../../config/config'),
-  jwt = require('jsonwebtoken'),
-  adminConfig = require('./../../config/adminConfig'),
-  appConfig = require('./../../config/appConfig');
+var config = require("./../../config/config"),
+  jwt = require("jsonwebtoken"),
+  adminConfig = require("./../../config/adminConfig");
 
 /**
  * [function description]
@@ -12,7 +11,8 @@ var config = require('./../../config/config'),
  */
 exports.authMiddleware = function(req, res, next) {
   //check header, url parameters or post parameters for token
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  var token = req.body.token ||
+              req.query.token || req.headers["x-access-token"];
   //decoding token
   if (token) {
     //verify secret and check exp
@@ -20,7 +20,7 @@ exports.authMiddleware = function(req, res, next) {
       if (err) {
         return res.json({
           success: false,
-          message: 'Failed to authenticate token'
+          message: "Failed to authenticate token"
         });
       } else {
         //if everything is good
@@ -32,7 +32,7 @@ exports.authMiddleware = function(req, res, next) {
     //if no token is found
     return res.status(403).send({
       success: false,
-      message: 'No token provided'
+      message: "No token provided"
     });
   }
 };
