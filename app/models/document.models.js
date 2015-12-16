@@ -1,13 +1,11 @@
 var mongoose = require("mongoose"),
-  User = require("./user.models"),
-  Role = require("./role.models"),
   Schema = mongoose.Schema,
   ObjectId = Schema.Types.ObjectId;
 
-DocumentSchema = new Schema({
+var DocumentSchema = new Schema({
 
   ownerId: [{
-    ref: 'User',
+    ref: "User",
     type: ObjectId,
     required: true
   }],
@@ -19,9 +17,9 @@ DocumentSchema = new Schema({
       validator: function(name) {
         return /\w/.test(name);
       },
-      message: '{VALUE} is not a valid name!'
+      message: "{VALUE} is not a valid name!"
     },
-    ref: 'Role'
+    ref: "Role"
   },
 
   content: {
@@ -31,12 +29,12 @@ DocumentSchema = new Schema({
       validator: function(name) {
         return /\w/.test(name);
       },
-      message: '{VALUE} is not a valid name!'
+      message: "{VALUE} is not a valid name!"
     }
   },
 
   role: {
-    ref: 'Role',
+    ref: "Role",
     type: ObjectId,
     required: true
   },
@@ -52,5 +50,5 @@ DocumentSchema = new Schema({
   }
 });
 
-var document = mongoose.model('Document', DocumentSchema);
-module.exports = document;
+var documents = mongoose.model("Documents", DocumentSchema);
+module.exports = documents;
