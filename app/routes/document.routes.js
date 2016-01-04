@@ -1,20 +1,39 @@
-var documentController = require('./../controllers/document.controllers'),
-  auth = require('./../middlewares/auth');
+(function () {
+  'Use strict';
 
-function docRoute(router) {
+  var documentController = require('./../controllers/document.controllers'),
+    auth = require('./../middlewares/auth'),
+    userAccess = require('./../middlewares/userAccess');
 
-  router.route('/documents')
-    .post(documentController.createDocument);
+  function docRoute(router) {
 
-  router.all('/*', auth.authMiddleware);
+    router.all('/*', auth.authMiddleware);
 
-  router.route('/documents')
-    .get(documentController.getAllDocument);
+    router.route('/documents')
+      .post(documentController.createDocument);
 
-  router.route('/documents/:id')
-    .get(documentController.getADocument)
-    .put(documentController.editDocument)
-    .delete(documentController.deleteDocument);
+    router.route('/documents')
+      .get(documentController.getAllDocument);
 
-}
-module.exports = docRoute;
+    router.route('/documents/limit/:limit')
+      .get(documentController.getAllDocument);
+
+    router.route('/documents/role/:role/:limit')
+      .get(documentController.getDocumentByRole);
+
+    router.route('/documents/user/:ownerId')
+      .get(documentController.getDocumentByUser);
+
+    router.route('/documents/:id')
+      .get(documentController.getADocument);
+
+    router.all('/*', userAccess.userAccess);
+
+    router.route('/documents/:id')
+      .put(documentController.editDocument)
+      .delete(documentController.deleteDocument);
+
+  }
+  module.exports = docRoute;
+
+})();
