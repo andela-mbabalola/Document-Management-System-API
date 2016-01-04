@@ -1,0 +1,362 @@
+var jwt = require('jsonwebtoken'),
+  fs = require('fs'),
+  expect = require('expect.js'),
+  server = require('./../server.js'),
+  request = require('supertest')(server),
+  user = require('./../app/models/user.models'),
+  role = require('./../app/models/role.models'),
+  docs = require('./../app/models/document.models'),
+  config = require('./../config/config'),
+  userSeeders = fs.readFileSync(__dirname + '/../seeders/user.seeders.json'),
+  roleSeeders = fs.readFileSync(__dirname + '/../seeders/role.seeders.json'),
+  docSeeders = fs.readFileSync(__dirname + '/../seeders/document.seeders.json'),
+
+  _userSeeders = JSON.parse(userSeeders),
+  _roleSeeders = JSON.parse(roleSeeders),
+  _docSeeders = JSON.parse(docSeeders);
+
+describe('Documents', function() {
+  describe('Create docs', function() {
+    var userToken;
+    beforeEach(function(done) {
+      role.create(_roleSeeders[1]).then(function(Role) {
+        _userSeeders[1].role = Role._id;
+        user.create(_userSeeders[1]).then(function(users) {
+          userToken = jwt.sign(users, config.secret, {
+            expiresInMinutes: 1440
+          });
+          _docSeeders[1].role = Role._id;
+          _docSeeders[1].ownerId = users._id;
+          docs.create(_docSeeders[1]).then(function() {}, function(err) {
+            if (err) {
+              console.log(err);
+              done();
+            }
+          });
+          done();
+        }, function(err) {
+          console.log(err);
+          done();
+        });
+      }, function(err) {
+        console.log(err);
+        done();
+      });
+    });
+
+    afterEach(function(done) {
+      docs.remove({}).exec(function() {
+        user.remove({}).exec(function() {
+          role.remove({}).exec(function(err) {
+            if (err) {
+              console.log(err);
+            }
+            console.log('Removed');
+            done();
+          });
+        });
+      });
+    });
+
+    it('creates unique documents', function(done) {
+      _docSeeders[1].role = 'Manager';
+      _docSeeders[1].ownerId = 'Emmy';
+      request.post('/api/documents')
+        .set('x-access-token', userToken)
+        .send(_docSeeders[1])
+        .end(function(err, res) {
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('Document already exists!');
+          done();
+        });
+    });
+
+    it('should not create document for unauthenticated user', function(done) {
+      request.post('/api/documents/')
+        .send(_docSeeders[0])
+        .end(function(err, res) {
+          expect(res.status).to.be(403);
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('No token provided');
+          done();
+        });
+    });
+
+    it('should not create user without role', function(done) {
+      request.post('/api/documents')
+        .set('x-access-token', userToken)
+        .send({
+          title: _docSeeders[1].title,
+          content: _docSeeders[1].content,
+          role: ''
+        })
+        .end(function(err, res) {
+          expect(res.status).to.be(403);
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('Role not found. Create first!');
+        });
+      done();
+    });
+
+    it('should create a new document', function(done) {
+      _docSeeders[2].role = 'Manager';
+      _docSeeders[2].ownerId = 'Emmy';
+      request.post('/api/documents')
+        .set('x-access-token', userToken)
+        .send(_docSeeders[2])
+        .end(function(err, res) {
+          expect(res.status).to.be(200);
+          expect(res.body.success).to.eql(true);
+          expect(res.body.message).to.eql('Document successfully created');
+          done();
+        });
+    });
+
+  });
+  var userToken,
+    //date,
+    doc_role,
+    doc_user,
+    doc_id,
+    limit = 1;
+  describe('CRUD', function() {
+
+    beforeEach(function(done) {
+      role.create(_roleSeeders[2]).then(function(Role) {
+        _userSeeders[2].role = Role._id;
+        user.create(_userSeeders[2]).then(function(users) {
+          userToken = jwt.sign(users, config.secret, {
+            expiresInMinutes: 1440
+          });
+
+          _docSeeders[2].role = Role._id;
+          _docSeeders[2].ownerId = users._id;
+          doc_role = Role._id;
+          doc_user = users._id;
+          _docSeeders[0].ownerId = users._id;
+          _docSeeders[0].role = Role._id;
+          docs.create(_docSeeders[2]).then(function(doc) {
+            //date = doc.createdAt;
+            doc_id = doc._id;
+            console.log(doc);
+            done();
+          }, function(err) {
+            if (err) {
+              console.log(err);
+              done();
+            }
+          });
+          //done();
+        }, function(err) {
+          console.log(err);
+          done();
+        });
+      }, function(err) {
+        console.log(err);
+        done();
+      });
+    });
+
+    afterEach(function(done) {
+      docs.remove({}).exec(function() {
+        user.remove({}).exec(function() {
+          role.remove({}).exec(function(err) {
+            if (err) {
+              console.log(err);
+            }
+            console.log('Removed');
+            done();
+          });
+        });
+      });
+    });
+
+    it('should return a limited document', function(done) {
+      request.get('/api/documents/limit/' + limit)
+        .set('x-access-token', userToken)
+        .expect(200)
+        .end(function(err, res) {
+          expect(res.body.success).to.eql(true);
+          done();
+        });
+    });
+
+    it('return all documents', function(done) {
+      var newdoc = new docs(_docSeeders[0]);
+      newdoc.save();
+
+      request.get('/api/documents/')
+        .set('x-access-token', userToken)
+        .expect(200)
+        .end(function(err, res) {
+          expect(res.body.success).to.eql(true);
+          expect(res.body.length).to.not.be(0);
+          done();
+        });
+    });
+
+    // it('get documents by date', function(done) {
+    //   request.get('/api/documents/date/' + date + '/' + limit)
+    //     .set('x-access-token', userToken)
+    //     .end(function(err, res) {
+    //       console.log(res.body);
+    //       //expect(res.body.success).to.eql(true);
+    //       expect(res.body.length).to.not.be(0);
+    //       done();
+    //     });
+    // });
+
+    it('get documents by role', function(done) {
+      request.get('/api/documents/role/' + doc_role + '/' + limit)
+        .set('x-access-token', userToken)
+        .end(function(err, res) {
+          //expect(res.body.success).to.eql(true);
+          expect(res.status).to.be(200);
+          expect(res.body.length).to.not.be(0);
+          done();
+        });
+    });
+
+    it('get documents by user', function(done) {
+      var newdoc = new docs(_docSeeders[0]);
+      newdoc.save();
+
+      request.get('/api/documents/user/' + doc_user)
+        .set('x-access-token', userToken)
+        .end(function(err, res) {
+          //expect(res.body.success).to.eql(true);
+          expect(res.status).to.be(200);
+          expect(res.body.length).to.not.be(0);
+          done();
+        });
+    });
+
+    it('should verify user is valid', function(done) {
+      var id = '568831c53ff90b4456491b50';
+      request.get('/api/documents/user/' + id)
+        .set('x-access-token', userToken)
+        .expect(404)
+        .end(function(err, res) {
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('User has no document');
+          done();
+        });
+    });
+
+    it('should return documents by id', function(done) {
+      request.get('/api/documents/' + doc_id)
+        .set('x-access-token', userToken)
+        .end(function(err, res) {
+          //expect(res.body.success).to.eql(true);
+          expect(res.status).to.be(200);
+          expect(res.body.length).to.not.be(0);
+          done();
+        });
+    });
+
+    it('should verify documents Id is valid', function(done) {
+      var id = '568831c53ff90b4456491b50';
+      request.get('/api/documents/' + id)
+        .set('x-access-token', userToken)
+        .expect(404)
+        .end(function(err, res) {
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('Document not found');
+          done();
+        });
+    });
+
+    it('should update a document', function(done) {
+      request.put('/api/documents/' + doc_id)
+        .set('x-access-token', userToken)
+        .send({
+          title: 'New file',
+          content: 'Updating a document',
+        }).expect(200).end(function(err, res) {
+          console.log(res.body);
+          expect(res.body.success).to.eql(true);
+          expect(res.body.message).to.eql('Document Successfully updated!');
+
+          done();
+        });
+    });
+
+    it('shouldnt allow anyone edit a document except creator', function(done) {
+      var newuser = new user(_userSeeders[0]);
+      newuser.save();
+      var newUserToken = jwt.sign(newuser, config.secret, {
+        expiresInMinutes: 1440
+      });
+      request.put('/api/documents/' + doc_id)
+        .set('x-access-token', newUserToken)
+        .send({
+          title: 'New file',
+          content: 'Updating a document',
+        }).expect(403).end(function(err, res) {
+          console.log(res.body);
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('Access denied');
+
+          done();
+        });
+    });
+
+    it('should not edit document without a valid id', function(done) {
+      var id = '568831c53ff90b4456491b50';
+      request.put('/api/documents/' + id)
+        .set('x-access-token', userToken)
+        .send({
+          title: 'New file',
+          content: 'Updating a document',
+        }).expect(404).end(function(err, res) {
+          console.log(res.body);
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('Document does not exist');
+
+          done();
+        });
+    });
+
+    it('should delete document by id', function(done) {
+      request.delete('/api/documents/' + doc_id)
+        .set('x-access-token', userToken)
+        .end(function(err, res) {
+          expect(res.body.success).to.eql(true);
+          expect(res.body.message).to.eql('Document successfully deleted');
+          done();
+        });
+    });
+
+    it('should not delete document with invalid id', function(done) {
+      var id = '568831c53ff90b4456491b50';
+      request.delete('/api/documents/' + id)
+        .set('x-access-token', userToken)
+        .end(function(err, res) {
+          console.log(res.body);
+          expect(res.status).to.eql(404);
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('Document not found');
+          done();
+        });
+    });
+
+    it('should not allow new user delete document of a user', function(done) {
+      var newuser = new user(_userSeeders[0]);
+      newuser.save();
+      var newUserToken = jwt.sign(newuser, config.secret, {
+        expiresInMinutes: 1440
+      });
+      request.delete('/api/documents/' + doc_id)
+        .set('x-access-token', newUserToken)
+        .end(function(err, res) {
+          console.log(res.body);
+          expect(res.status).to.eql(403);
+          expect(res.body.success).to.eql(false);
+          expect(res.body.message).to.eql('Access denied');
+          done();
+        });
+    });
+
+  });
+
+});
