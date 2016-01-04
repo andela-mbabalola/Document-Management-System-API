@@ -1,14 +1,15 @@
 var mongoose = require("mongoose"),
+date = require("./../helpers/dateHelper"),
   Schema = mongoose.Schema,
   ObjectId = Schema.Types.ObjectId;
 
 var DocumentSchema = new Schema({
 
-  ownerId: [{
+  ownerId: {
     ref: "User",
     type: ObjectId,
     required: true
-  }],
+  },
 
   title: {
     type: String,
@@ -48,6 +49,12 @@ var DocumentSchema = new Schema({
     type: Date,
     default: Date.now
   }
+});
+
+DocumentSchema.pre("save", function(next) {
+  var doc = this;
+  doc.createdAt = date;
+  next();
 });
 
 var documents = mongoose.model("Documents", DocumentSchema);
