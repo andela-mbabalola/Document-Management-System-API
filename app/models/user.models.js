@@ -4,7 +4,7 @@ var mongoose = require("mongoose"),
   Schema = mongoose.Schema,
   ObjectId = Schema.Types.ObjectId;
 
-User = new Schema({
+var User = new Schema({
   name: {
     firstName: {
       type: String,
@@ -64,11 +64,11 @@ User = new Schema({
     }
   },
 
-  role: [{
+  role: {
     type: ObjectId,
     ref: "Role",
     required: true
-  }],
+  },
 
   createdAt: {
     type: Date,
