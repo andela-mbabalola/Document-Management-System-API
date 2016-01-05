@@ -1,17 +1,27 @@
-var roleController = require('./../controllers/role.controllers'),
-  auth = require('./../middlewares/auth');
+(function() {
+  'Use strict';
 
-function roleRoute(router) {
+  var roleController = require('./../controllers/role.controllers'),
+    auth = require('./../middlewares/auth');
 
-  router.all('/*', auth.authMiddleware);
+  function roleRoute(router) {
 
-  router.route('/superAdministrator/:id')
-    .put(roleController.editRole)
-    .delete(roleController.deleteRole);
+    //mounting the authMiddleware middleware on all the routes
+    router.all('/*', auth.authMiddleware);
 
-  router.route('/superAdministrator/:userName')
-    .post(auth.verifyAdmin, roleController.createRole)
-    .get(auth.verifyAdmin, roleController.getAllRoles);
+    //route to get, edit and delete a role with a specific Id
+    router.route('/role/superAdministrator/:id')
+      .get(roleController.getRoleById)
+      .put(roleController.editRole)
+      .delete(roleController.deleteRole);
 
-}
-module.exports = roleRoute;
+    //route to create and return all available role(s)
+    router.route('/role/superAdministrator/:userName')
+      .post(auth.verifyAdmin, roleController.createRole)
+      .get(auth.verifyAdmin, roleController.getAllRoles);
+
+  }
+  //exporting all available routes
+  module.exports = roleRoute;
+
+})();
