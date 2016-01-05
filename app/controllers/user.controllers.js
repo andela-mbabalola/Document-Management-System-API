@@ -8,20 +8,22 @@
     helpers = require("./../helpers/helper");
 
   /**
-   * [function description]
-   * @param  {[type]} req [description]
-   * @param  {[type]} res [description]
-   * @return {[type]}     [description]
+   * [function to login a valid user]
+   * @param  {[http request object]} req [used to get the request query]
+   * @param  {[http response object]} res [used to respond back to client ]
+   * @return {[json]}     [success message that user has been logged in]
    */
   exports.login = function(req, res) {
+    //checking if the user exists
     User.findOne({
       userName: req.body.userName
     }, function(err, user) {
       if (err) {
         res.send(err);
       } else {
+        //if user is not found
         if (!user) {
-          res.json({
+          res.status(404).json({
             success: false,
             message: "Authentication failed. User not found"
           });
@@ -35,13 +37,13 @@
               expiresInMinutes: 1440
             });
 
-            res.json({
+            res.status(200).json({
               success: true,
               message: "Successfully logged in",
               token: token
             });
           } else {
-            res.json({
+            res.status(404).json({
               success: false,
               message: "Authentication failed. Wrong password"
             });
@@ -53,36 +55,41 @@
   };
 
   /**
-   * [function description]
-   * @param  {[type]} req [description]
-   * @param  {[type]} res [description]
-   * @return {[type]}     [description]
+   * [function to create a new user]
+   * @param  {[http request object]} req [used to get the request query]
+   * @param  {[http response object]} res [used to respond back to client ]
+   * @return {[json]}     [success message that user has been created]
    */
   exports.createUser = function(req, res) {
+    //check if role exists
     Role.findOne({
       title: req.body.role
     }, function(err, role) {
       if (err) {
         res.send(err);
       }
+      //if role does not exist
       if (!role) {
-        res.json({
+        res.status(404).json({
           success: false,
           message: "Role not found. Create first"
         });
       } else {
+        //check if user exists
         User.findOne({
           userName: req.body.userName
         }, function(err, user) {
           if (err) {
             res.send(err);
           }
+          //if a user is found
           if (user) {
-            res.json({
+            res.status(401).json({
               success: false,
               message: "User already exists!"
             });
           } else {
+            //ensuring all the parameters are entered before creating
             if (!req.body.firstName && !req.body.lastName) {
               res.status(403).send({
                 success: false,
@@ -119,11 +126,12 @@
                 email: req.body.email,
                 role: role
               });
+              //createa new user
               newUser.save(function(err) {
                 if (err) {
                   res.send(err);
                 } else {
-                  res.send({
+                  res.status(200).send({
                     success: true,
                     message: "User Successfully created!"
                   });
@@ -137,58 +145,58 @@
   };
 
   /**
-   * [function description]
-   * @param  {[type]} req [description]
-   * @param  {[type]} res [description]
-   * @return {[type]}     [description]
+   * [function to get all the users in the database]
+   * @param  {[http request object]} req [used to get the request query]
+   * @param  {[http response object]} res [used to respond back to client ]
+   * @return {[json]}     [all users available in the database]
    */
   exports.getAllUsers = function(req, res) {
+    //search for all the users
     User.find({}).exec(function(err, users) {
       if (err) {
         res.send(err);
+        //if no user is found
       } else if (!users) {
-        res.send({
+        res.status(404).send({
           success: false,
           message: "There are currently no users"
         });
       } else {
-        res.send({
-          success: true,
-          message: users
-        });
+        //if users are found
+        res.status(200).send(users);
       }
     });
   };
 
   /**
-   * [function description]
-   * @param  {[type]} req [description]
-   * @param  {[type]} res [description]
-   * @return {[type]}     [description]
+   * [function to get a user by its Id]
+   * @param  {[http request object]} req [used to get the request query]
+   * @param  {[http response object]} res [used to respond back to client ]
+   * @return {[json]}     [user with specific Id]
    */
   exports.getUserById = function(req, res) {
+    //search for a user with a specific Id
     User.findById(req.params.id, function(err, user) {
       if (err) {
         res.send(err);
+        //if no user is found
       } else if (!user) {
         res.status(404).json({
           success: false,
           message: "User not found!"
         });
       } else {
-        res.json({
-          success: true,
-          message: user
-        });
+        //if a user is found
+        res.status(200).json(user);
       }
     });
   };
 
   /**
-   * [function description]
-   * @param  {[type]} req [description]
-   * @param  {[type]} res [description]
-   * @return {[type]}     [description]
+   * [function to update a user's details]
+   * @param  {[http request object]} req [used to get the request query]
+   * @param  {[http response object]} res [used to respond back to client ]
+   * @return {[json]}     [success message that user has been updated]
    */
   exports.updateUser = function(req, res) {
     req.body.name = {
@@ -196,30 +204,34 @@
       lastName: req.body.lastName
     };
 
+    //check if role exists
     Role.findOne({
       title: req.body.role
     }, function(err, role) {
       if (err) {
         res.send(err);
+        //if role is not found
       } else if (!role) {
-        res.json({
+        res.status(404).json({
           success: false,
           message: "Role does not exist, create first"
         });
       } else {
         req.body.role = role;
+        //find user and update its details
         User.findByIdAndUpdate(
           req.params.id, req.body,
           function(err, user) {
             if (err) {
               res.send(err);
+              //if user is not found
             } else if (!user) {
               res.status(404).json({
                 success: false,
                 message: "User does not exist"
               });
             } else {
-              res.json({
+              res.status(200).json({
                 success: true,
                 message: "User Successfully updated!"
               });
@@ -230,15 +242,17 @@
   };
 
   /**
-   * [function description]
-   * @param  {[type]} req [description]
-   * @param  {[type]} res [description]
-   * @return {[type]}     [description]
+   * [function to delete a user]
+   * @param  {[http request object]} req [used to get the request query]
+   * @param  {[http response object]} res [used to respond back to client ]
+   * @return {[json]}     [success message that user has been deleted]
    */
   exports.deleteUser = function(req, res) {
+    //find a user and delete
     User.findByIdAndRemove(req.params.id, function(err, user) {
       if (err) {
         res.send(err);
+        //if user is not found
       } else if (!user) {
         res.status(404).json({
           success: false,
@@ -254,10 +268,10 @@
   };
 
   /**
-   * [function description]
-   * @param  {[type]} req [description]
-   * @param  {[type]} res [description]
-   * @return {[type]}     [description]
+   * [function to find a user by documents he/she has]
+   * @param  {[http request object]} req [used to get the request query]
+   * @param  {[http response object]} res [used to respond back to client ]
+   * @return {[json]}     [documents the user has]
    */
   exports.findUserByDocs = function(req, res) {
     Document.find({
