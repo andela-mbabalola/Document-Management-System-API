@@ -1,3 +1,8 @@
-module.exports = {
-  'secret': 'programmingisfun'
-};
+(function() {
+  'Use strict';
+
+  module.exports = {
+    'secret': 'programmingisfun'
+  };
+
+})();
