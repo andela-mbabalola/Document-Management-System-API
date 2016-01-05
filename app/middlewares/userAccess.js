@@ -1,17 +1,26 @@
 (function() {
   'Use strict';
 
-  var documents = require('./../models/document.models'),
-    config = require('./../../config/adminConfig');
+  var documents = require('./../models/document.models.js'),
+    config = require('./../../config/adminConfig.js');
+
+    /**
+     * [function description]
+     * @param  {[http request object]} req [used to get the request query]
+     * @param  {[http response object]} res [used to respond back to client ]
+     * @param  {Function} next [pass control to the next handler]
+     * @return {[json]}        [message that permission has been denied]
+     */
 
   exports.userAccess = function(req, res, next) {
     documents.findOne(req.params.id, function(err, doc) {
       if (err) {
         res.send(err);
       } else if (!doc) {
+        console.log('test' , doc);
         res.status(404).json({
           success: false,
-          message: 'Doc not found'
+          message: 'Docs not found'
         });
       } else {
         if (req.decoded._id !== doc.ownerId.toString() &&
