@@ -1,11 +1,7 @@
-[
-  {
-    "title" : "Administrator"
-  },
-  {
-    "title" : "Manager"
-  },
-  {
-    "title" : "Supervisor"
-  }
-]
+[{
+  "title": "Administrator"
+}, {
+  "title": "Manager"
+}, {
+  "title": "Supervisor"
+}]
