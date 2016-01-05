@@ -1,5 +1,10 @@
-module.exports = {
+(function() {
+  'Use strict';
 
-  'url' : 'mongodb://localhost/restApi'
+  module.exports = {
 
-};
+    'url': 'mongodb://localhost/restApi'
+
+  };
+
+})();
