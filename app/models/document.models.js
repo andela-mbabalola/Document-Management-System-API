@@ -1,61 +1,67 @@
-var mongoose = require("mongoose"),
-date = require("./../helpers/dateHelper"),
-  Schema = mongoose.Schema,
-  ObjectId = Schema.Types.ObjectId;
+(function() {
+  "Use strict";
 
-var DocumentSchema = new Schema({
+  var mongoose = require("mongoose"),
+    date = require("./../helpers/dateHelper"),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 
-  ownerId: {
-    ref: "User",
-    type: ObjectId,
-    required: true
-  },
+  var DocumentSchema = new Schema({
 
-  title: {
-    type: String,
-    required: true,
-    validate: {
-      validator: function(name) {
-        return /\w/.test(name);
-      },
-      message: "{VALUE} is not a valid name!"
+    ownerId: {
+      ref: "User",
+      type: ObjectId,
+      required: true
     },
-    ref: "Role"
-  },
 
-  content: {
-    type: String,
-    required: true,
-    validate: {
-      validator: function(name) {
-        return /\w/.test(name);
+    title: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function(name) {
+          return /\w/.test(name);
+        },
+        message: "{VALUE} is not a valid name!"
       },
-      message: "{VALUE} is not a valid name!"
+      ref: "Role"
+    },
+
+    content: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function(name) {
+          return /\w/.test(name);
+        },
+        message: "{VALUE} is not a valid name!"
+      }
+    },
+
+    role: {
+      ref: "Role",
+      type: ObjectId,
+      required: true
+    },
+
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+
+    updatedAt: {
+      type: Date,
+      default: Date.now
     }
-  },
+  });
 
-  role: {
-    ref: "Role",
-    type: ObjectId,
-    required: true
-  },
+  DocumentSchema.pre("save", function(next) {
+    var doc = this;
+    doc.createdAt = date;
+    next();
+  });
 
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
+  var documents = mongoose.model("Documents", DocumentSchema);
+  module.exports = documents;
 
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
 
-DocumentSchema.pre("save", function(next) {
-  var doc = this;
-  doc.createdAt = date;
-  next();
-});
-
-var documents = mongoose.model("Documents", DocumentSchema);
-module.exports = documents;
+})();
