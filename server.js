@@ -1,6 +1,9 @@
-var app = require('./config/appConfig'),
-  mongoose = require('mongoose'),
-  db = require('./config/database');
+(function() {
+  "Use strict";
+
+var app = require("./config/appConfig"),
+  mongoose = require("mongoose"),
+  db = require("./config/database"),
 
   port = process.env.PORT || 4444;
 
@@ -12,3 +15,5 @@ mongoose.connect(db.url); // connect to database
 console.log("Successfully connected to port " + port);
 
 module.exports = app;
+
+})();
