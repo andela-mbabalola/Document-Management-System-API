@@ -4,7 +4,7 @@
   "description": "RESTful API to implement a document management system",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine-node --captureExceptions --verbose spec/userTest.spec.js",
+    "test": "jasmine-node --captureExceptions --verbose --growl spec/userTest.spec.js",
     "start": "nodemon server.js"
   },
   "repository": {
