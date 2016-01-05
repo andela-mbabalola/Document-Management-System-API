@@ -1,3 +1,9 @@
+/****************************************************************
+*Name: DMS API Test.
+*Description: To test the user's segment of the DMS API
+*Author: Babalola Maryam
+*****************************************************************/
+
 (function() {
   "Use strict";
 
@@ -19,7 +25,9 @@
     describe("/POST: Validate user login", function() {
 
       beforeEach(function(done) {
+        //create a new role using content of the role seeder
         role.create(_roleSeeders[2]).then(function(Role) {
+          //create a new user using content of the user seeder
           _userSeeders[2].role = Role._id;
           User.create(_userSeeders[2]).then(function() {
             done();
@@ -34,12 +42,13 @@
       });
 
       afterEach(function(done) {
+        //delete the user from the database
         User.remove({}).exec(function() {
+          //delete role from the database
           role.remove({}).exec(function(err) {
             if (err) {
               console.log(err);
             }
-            console.log("Removed");
             done();
           });
         });
@@ -56,7 +65,10 @@
           .send({
             userName: _userSeeders[2].userName,
             password: "me"
-          }).end(function(err, res) {
+          })
+          .expect(404)
+          .end(function(err, res) {
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql
               ("Authentication failed. Wrong password");
@@ -69,9 +81,10 @@
           .send({
             userName: "myName",
             password: _userSeeders[2].password
-          }).end(function(err, res) {
-            console.log(res.body);
-
+          })
+          .expect(404)
+          .end(function(err, res) {
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql
               ("Authentication failed. User not found");
@@ -85,13 +98,13 @@
           .send({
             userName: _userSeeders[2].userName,
             password: _userSeeders[2].password
-          }).end(function(err, res) {
-            console.log(res.body.success);
-
+          })
+          .expect(200)
+          .end(function(err, res) {
+            expect(res.status).to.be(200);
             expect(res.body.success).to.eql(true);
             expect(res.body.message).to.eql("Successfully logged in");
             expect(res.body.message).to.not.be.empty();
-
 
             done();
           });
@@ -100,8 +113,10 @@
 
     describe("/POST: Create new users", function() {
       beforeEach(function(done) {
+        //create a new role using content of the role seeder
         role.create(_roleSeeders[1]).then(function(Role) {
           _userSeeders[1].role = Role._id;
+          //create a new user using content of the user seeder
           User.create(_userSeeders[1]).then(function() {
             done();
           }, function(err) {
@@ -115,7 +130,9 @@
       });
 
       afterEach(function(done) {
+        //delete user from the database
         User.remove({}).exec(function() {
+          //delete roles from the database
           role.remove({}).exec(function(err) {
             if (err) {
               console.log(err);
@@ -138,8 +155,10 @@
             password: _userSeeders[0].password,
             email: _userSeeders[0].email,
             role: _userSeeders[0].role
-          }).end(function(err, res) {
-            console.log(res.body);
+          })
+          .expect(200)
+          .end(function(err, res) {
+            expect(res.status).to.be(200);
             expect(res.body.success).to.eql(true);
             expect(res.body.message).to.eql("User Successfully created!");
 
@@ -156,8 +175,10 @@
             password: _userSeeders[1].password,
             email: _userSeeders[1].email,
             role: "Owner"
-          }).end(function(err, res) {
-
+          })
+          .expect(404)
+          .end(function(err, res) {
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql("Role not found. Create first");
 
@@ -173,8 +194,10 @@
             userName: _userSeeders[1].userName,
             password: _userSeeders[1].password,
             email: _userSeeders[1].email,
-          }).end(function(err, res) {
-
+          })
+          .expect(404)
+          .end(function(err, res) {
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql("Role not found. Create first");
 
@@ -185,7 +208,6 @@
       it("creates unique users", function(done) {
         _userSeeders[1].role = "Manager";
         request.post("/api/users/")
-          // .set("Accept", "x-www-form-urlencoded")
           .send({
             firstName: _userSeeders[1].name.firstName,
             lastName: _userSeeders[1].name.lastName,
@@ -196,10 +218,10 @@
           })
           .expect(401)
           .end(function(err, res) {
+            expect(res.status).to.be(401);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql("User already exists!");
-            //expect(err).not.toBeUndefined();
-            //expect(err).not.to.be.null();
+
             done();
           });
       });
@@ -212,7 +234,9 @@
             password: _userSeeders[2].password,
             email: _userSeeders[2].email,
             role: _userSeeders[2].role
-          }).end(function(err, res) {
+          })
+          .expect(403)
+          .end(function(err, res) {
             expect(res.status).to.be(403);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql
@@ -229,8 +253,10 @@
     describe("/GET: Get all users", function() {
 
       beforeEach(function(done) {
+        //create a new role using content of the role seeder
         role.create(_roleSeeders[2]).then(function(Role) {
           _userSeeders[2].role = Role._id;
+          //create a new user using content of the user seeder
           User.create(_userSeeders[2]).then(function(users) {
             userToken = jwt.sign(users, config.secret, {
               expiresInMinutes: 1440
@@ -248,26 +274,27 @@
       });
 
       afterEach(function(done) {
+        //delete roles from the databse
         User.remove({}).exec(function() {
+          //delete users from database
           role.remove({}).exec(function(err) {
             if (err) {
               console.log(err);
             }
-            console.log("Removed");
             done();
           });
         });
       });
 
       it("should return a user when id is specified", function(done) {
-
-        //console.log(userId);
         request.get("/api/users/" + userId)
           .set("x-access-token", userToken)
           .expect(200)
           .end(function(err, res) {
-            console.log("here" + res.body);
-            expect(res.body.success).to.eql(true);
+            expect(res.status).to.be(200);
+            expect(res.body.length).not.to.be(0);
+            expect(res.body.userName).to.be("Bolu");
+            expect(res.body.email).to.be("bolu@gmail.com");
             done();
           });
       });
@@ -277,9 +304,10 @@
           .set("x-access-token", userToken)
           .expect(200)
           .end(function(err, res) {
-            console.log(res.body);
-            expect(res.body.success).to.eql(true);
+            expect(res.status).to.be(200);
             expect(res.body.length).to.not.be(0);
+            expect(res.body[0].userName).to.be("Bolu");
+            expect(res.body[0].email).to.be("bolu@gmail.com");
             done();
           });
       });
@@ -288,9 +316,9 @@
         var id = "56617723d2e4a33738e80e4b";
         request.get("/api/users/" + id)
           .set("x-access-token", userToken)
-          .expect(200)
+          .expect(404)
           .end(function(err, res) {
-            console.log(res.body);
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql("User not found!");
             done();
@@ -301,6 +329,7 @@
         request.get("/api/users/" + userId)
           .expect(403)
           .end(function(err, res) {
+            expect(res.status).to.be(403);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql("No token provided");
             done();
@@ -312,8 +341,10 @@
     describe("Update Users", function() {
 
       beforeEach(function(done) {
+        //create a new role using content of the role seeder
         role.create(_roleSeeders[2]).then(function(Role) {
           _userSeeders[2].role = Role._id;
+          //create a new user using content of the user seeder
           User.create(_userSeeders[2]).then(function(users) {
             userToken = jwt.sign(users, config.secret, {
               expiresInMinutes: 1440
@@ -331,12 +362,13 @@
       });
 
       afterEach(function(done) {
+        //delete user from the database
         User.remove({}).exec(function() {
+          //delete role from the database
           role.remove({}).exec(function(err) {
             if (err) {
               console.log(err);
             }
-            console.log("Removed");
             done();
           });
         });
@@ -353,8 +385,10 @@
             email: "Lawry@gmail.com",
             password: "mine",
             role: "Manager"
-          }).expect(200).end(function(err, res) {
-            console.log(res.body);
+          })
+          .expect(403)
+          .end(function(err, res) {
+            expect(res.status).to.be(403);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.equal("No token provided");
 
@@ -395,8 +429,10 @@
             email: "Lawry@gmail.com",
             password: "mine",
             role: "Manager"
-          }).expect(200).end(function(err, res) {
-            console.log(res.body);
+          })
+          .expect(404)
+          .end(function(err, res) {
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql
               ("Role does not exist, create first");
@@ -417,8 +453,10 @@
             email: "Lawry@gmail.com",
             password: "mine",
             role: "Manager"
-          }).expect(200).end(function(err, res) {
-            console.log(res.body);
+          })
+          .expect(404)
+          .end(function(err, res) {
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql
               ("Role does not exist, create first");
@@ -440,8 +478,10 @@
             email: "Lawry@gmail.com",
             password: "mine",
             role: "Supervisor"
-          }).expect(200).end(function(err, res) {
-            console.log(res.body);
+          })
+          .expect(404)
+          .end(function(err, res) {
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql("User does not exist");
 
@@ -453,8 +493,10 @@
     describe("Delete users", function() {
 
       beforeEach(function(done) {
+        //create a new role using content of the role seeder
         role.create(_roleSeeders[2]).then(function(Role) {
           _userSeeders[2].role = Role._id;
+          //create a new user using content of the user seeder
           User.create(_userSeeders[2]).then(function(users) {
             userToken = jwt.sign(users, config.secret, {
               expiresInMinutes: 1440
@@ -472,12 +514,13 @@
       });
 
       afterEach(function(done) {
+        //delete user from the database
         User.remove({}).exec(function() {
+          //delete role from the database
           role.remove({}).exec(function(err) {
             if (err) {
               console.log(err);
             }
-            console.log("Removed");
             done();
           });
         });
@@ -487,7 +530,7 @@
         request.delete("/api/users/" + userId)
           .expect(403)
           .end(function(err, res) {
-            console.log(res.body);
+            expect(res.status).to.be(403);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql("No token provided");
 
@@ -499,9 +542,9 @@
         var id = "56617723d2e4a33738e80e4b";
         request.delete("/api/users/" + id)
           .set("x-access-token", userToken)
-          .expect(403)
+          .expect(404)
           .end(function(err, res) {
-            console.log(res.body);
+            expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql("User does not exist!");
 
@@ -512,9 +555,9 @@
       it("deletes valid users", function(done) {
         request.delete("/api/users/" + userId)
           .set("x-access-token", userToken)
-          .expect(403)
+          .expect(200)
           .end(function(err, res) {
-            console.log(res.body);
+            expect(res.status).to.be(200);
             expect(res.body.success).to.eql(true);
             expect(res.body.message).to.eql("User successfully deleted!");
 
