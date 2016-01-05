@@ -1,4 +1,9 @@
-module.exports = {
-  'adminName' : 'owner',
-  'role' : 'superAdministrator'
-};
+(function() {
+  'Use strict';
+
+  module.exports = {
+    'adminName': 'owner',
+    'role': 'superAdministrator'
+  };
+
+})();
