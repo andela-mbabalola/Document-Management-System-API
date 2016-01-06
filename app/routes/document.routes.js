@@ -7,9 +7,6 @@
 
   function docRoute(router) {
 
-    //mounting the authMiddleware on all the routess
-    //router.all('/*', auth.authMiddleware);
-
     //route to create a new document
     router.route('/documents')
       .post(auth.authMiddleware, documentController.createDocument);
@@ -19,7 +16,7 @@
       .get(auth.authMiddleware, documentController.getAllDocument);
 
     //route to get all documents with a specified limit
-    router.route('/documents/limit/:limit')
+    router.route('/documents?limit=:limit')
       .get(auth.authMiddleware, documentController.getAllDocument);
 
     //route to get all documents with a specific role
@@ -47,9 +44,7 @@
         documentController.editDocument)
       .delete(auth.authMiddleware, userAccess.userAccess,
         documentController.deleteDocument);
-
   }
   //exporting all routes
   module.exports = docRoute;
-
 })();
