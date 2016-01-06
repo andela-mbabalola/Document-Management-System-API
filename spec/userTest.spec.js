@@ -8,18 +8,14 @@
   'Use strict';
 
   var jwt = require('jsonwebtoken'),
-    fs = require('fs'),
     expect = require('expect.js'),
     server = require('./../server.js'),
     request = require('supertest')(server),
     User = require('./../app/models/user.models'),
     role = require('./../app/models/role.models'),
     config = require('./../config/config'),
-    userSeeders = fs.readFileSync(__dirname + '/../seeders/user.seeders.json'),
-    roleSeeders = fs.readFileSync(__dirname + '/../seeders/role.seeders.json'),
-
-    _userSeeders = JSON.parse(userSeeders),
-    _roleSeeders = JSON.parse(roleSeeders);
+    _userSeeders = require('./../seeders/user.seeders.json'),
+    _roleSeeders = require('./../seeders/role.seeders.json');
 
   describe('Users', function() {
     describe('/POST: Validate user login', function() {
@@ -176,9 +172,9 @@
             email: _userSeeders[1].email,
             role: 'Owner'
           })
-          *.expect(404)
+          .expect(400)
           .end(function(err, res) {
-            expect(res.status).to.be(404);
+            expect(res.status).to.be(400);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql('Role not found. Create first');
 
@@ -195,9 +191,9 @@
             password: _userSeeders[1].password,
             email: _userSeeders[1].email,
           })
-          .expect(404)
+          .expect(400)
           .end(function(err, res) {
-            expect(res.status).to.be(404);
+            expect(res.status).to.be(400);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql('Role not found. Create first');
 
@@ -435,9 +431,9 @@
             password: 'mine',
             role: 'Manager'
           })
-          .expect(404)
+          .expect(400)
           .end(function(err, res) {
-            expect(res.status).to.be(404);
+            expect(res.status).to.be(400);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql
               ('Role does not exist, create first');
@@ -459,9 +455,9 @@
             password: 'mine',
             role: 'Manager'
           })
-          .expect(404)
+          .expect(400)
           .end(function(err, res) {
-            expect(res.status).to.be(404);
+            expect(res.status).to.be(400);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql
               ('Role does not exist, create first');
