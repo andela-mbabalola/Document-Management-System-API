@@ -8,39 +8,45 @@
   function docRoute(router) {
 
     //mounting the authMiddleware on all the routess
-    router.all('/*', auth.authMiddleware);
+    //router.all('/*', auth.authMiddleware);
 
     //route to create a new document
     router.route('/documents')
-      .post(documentController.createDocument);
+      .post(auth.authMiddleware, documentController.createDocument);
 
     //route to get all available documents
     router.route('/documents')
-      .get(documentController.getAllDocument);
+      .get(auth.authMiddleware, documentController.getAllDocument);
 
     //route to get all documents with a specified limit
     router.route('/documents/limit/:limit')
-      .get(documentController.getAllDocument);
+      .get(auth.authMiddleware, documentController.getAllDocument);
 
     //route to get all documents with a specific role
     router.route('/documents/role/:role/:limit')
-      .get(documentController.getDocumentByRole);
+      .get(auth.authMiddleware, documentController.getDocumentByRole);
 
-      //route to get all documents for a specific user
+    //route to get all documents for a specific user
     router.route('/documents/user/:ownerId')
-      .get(documentController.getDocumentByUser);
+      .get(auth.authMiddleware, documentController.getDocumentByUser);
 
-      //route to get a document with its Id
+    //route to get a document with its Id
     router.route('/documents/:id')
-      .get(documentController.getADocument);
+      .get(auth.authMiddleware, documentController.getADocument);
 
-      //mounting the userAccess middleware
-    //router.all('/*', userAccess.userAccess);
+    //mounting the userAccess middleware
+    router.all('/*', userAccess.userAccess);
 
     //router to edit and delete a document with a specific Id
     router.route('/documents/:id')
-      .put(userAccess.userAccess, documentController.editDocument)
-      .delete(userAccess.userAccess, documentController.deleteDocument);
+      .put(auth.authMiddleware, documentController.editDocument)
+      .delete(auth.authMiddleware, documentController.deleteDocument);
+
+    router.route('/documents/title/:title/:id')
+      .put(auth.authMiddleware, userAccess.userAccess,
+        documentController.editDocument)
+      .delete(auth.authMiddleware, userAccess.userAccess,
+        documentController.deleteDocument);
 
   }
   //exporting all routes
