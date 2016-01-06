@@ -34,5 +34,4 @@
 
   //exporting app
   module.exports = app;
-
 })();
