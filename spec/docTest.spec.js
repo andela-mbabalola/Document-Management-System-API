@@ -139,6 +139,7 @@
         doc_role,
         doc_user,
         doc_id,
+        title,
         limit = 1;
       beforeEach(function(done) {
         //creating a role using the content of the role seeder
@@ -163,6 +164,7 @@
             //creating a document using the content of the document seeder
             Docs.create(_docSeeders[2]).then(function(doc) {
               doc_id = doc._id;
+              title = doc.title;
               done();
             }, function(err) {
               if (err) {
@@ -313,7 +315,7 @@
         var newUserToken = jwt.sign(newuser, config.secret, {
           expiresInMinutes: 1440
         });
-        request.put('/api/documents/' + doc_id)
+        request.put('/api/documents/title/' + title + '/' + doc_id)
           .set('x-access-token', newUserToken)
           .send({
             title: 'New file',
@@ -378,7 +380,7 @@
         var newUserToken = jwt.sign(newuser, config.secret, {
           expiresInMinutes: 1440
         });
-        request.delete('/api/documents/' + doc_id)
+        request.delete('/api/documents/title/' + title + '/' + doc_id)
           .set('x-access-token', newUserToken)
           .expect(403)
           .end(function(err, res) {
