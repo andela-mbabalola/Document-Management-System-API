@@ -1,9 +1,9 @@
 (function() {
-  "Use strict";
+  'Use strict';
 
-var app = require("./config/appConfig"),
-  mongoose = require("mongoose"),
-  db = require("./config/database"),
+var app = require('./config/appConfig'),
+  mongoose = require('mongoose'),
+  db = require('./config/database'),
 
   port = process.env.PORT || 4444;
 
@@ -12,7 +12,7 @@ var app = require("./config/appConfig"),
 mongoose.connect(db.url); // connect to database
 
  app.listen(port);
-console.log("Successfully connected to port " + port);
+console.log('Successfully connected to port ' + port);
 
 module.exports = app;
 
