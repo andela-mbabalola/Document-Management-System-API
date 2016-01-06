@@ -5,5 +5,4 @@
     'adminName': 'owner',
     'role': 'superAdministrator'
   };
-
 })();
