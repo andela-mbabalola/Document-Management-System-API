@@ -176,7 +176,7 @@
             email: _userSeeders[1].email,
             role: 'Owner'
           })
-          .expect(404)
+          *.expect(404)
           .end(function(err, res) {
             expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
