@@ -4,13 +4,13 @@
   var documents = require('./../models/document.models.js'),
     config = require('./../../config/adminConfig.js');
 
-    /**
-     * [function description]
-     * @param  {[http request object]} req [used to get the request query]
-     * @param  {[http response object]} res [used to respond back to client ]
-     * @param  {Function} next [pass control to the next handler]
-     * @return {[json]}        [message that permission has been denied]
-     */
+  /**
+   * [function description]
+   * @param  {[http request object]} req [used to get the request query]
+   * @param  {[http response object]} res [used to respond back to client ]
+   * @param  {Function} next [pass control to the next handler]
+   * @return {[json]}        [message that permission has been denied]
+   */
 
   exports.userAccess = function(req, res, next) {
     documents.findOne(req.params.id, function(err, doc) {
@@ -33,8 +33,6 @@
           next();
         }
       }
-
     });
   };
-
 })();
