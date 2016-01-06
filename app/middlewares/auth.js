@@ -1,9 +1,9 @@
 (function() {
-  "Use strict";
+  'Use strict';
 
-  var config = require("./../../config/config"),
-    jwt = require("jsonwebtoken"),
-    adminConfig = require("./../../config/adminConfig");
+  var config = require('./../../config/config'),
+    jwt = require('jsonwebtoken'),
+    adminConfig = require('./../../config/adminConfig');
 
   /**
    * [function to generate a token]
@@ -15,7 +15,7 @@
   exports.authMiddleware = function(req, res, next) {
     //check header, url parameters or post parameters for token
     var token = req.body.token ||
-      req.query.token || req.headers["x-access-token"];
+      req.query.token || req.headers['x-access-token'];
     //decoding token
     if (token) {
       //verify secret and check exp
@@ -23,7 +23,7 @@
         if (err) {
           return res.json({
             success: false,
-            message: "Failed to authenticate token"
+            message: 'Failed to authenticate token'
           });
         } else {
           //if everything is good
@@ -35,7 +35,7 @@
       //if no token is found
       return res.status(403).send({
         success: false,
-        message: "No token provided"
+        message: 'No token provided'
       });
     }
   };
@@ -52,7 +52,7 @@
     if (req.params.userName !== adminConfig.adminName) {
       res.json({
         success: false,
-        message: "Access denied!"
+        message: 'Access denied!'
       });
     } else {
       next();
