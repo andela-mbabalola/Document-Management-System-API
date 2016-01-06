@@ -1,15 +1,15 @@
 (function() {
-  "Use strict";
+  'Use strict';
 
-  var mongoose = require("mongoose"),
-    date = require("./../helpers/dateHelper"),
+  var mongoose = require('mongoose'),
+    date = require('./../helpers/dateHelper'),
     Schema = mongoose.Schema,
     ObjectId = Schema.Types.ObjectId;
 
   var DocumentSchema = new Schema({
 
     ownerId: {
-      ref: "User",
+      ref: 'User',
       type: ObjectId,
       required: true
     },
@@ -21,9 +21,9 @@
         validator: function(name) {
           return /\w/.test(name);
         },
-        message: "{VALUE} is not a valid name!"
+        message: '{VALUE} is not a valid name!'
       },
-      ref: "Role"
+      ref: 'Role'
     },
 
     content: {
@@ -33,12 +33,12 @@
         validator: function(name) {
           return /\w/.test(name);
         },
-        message: "{VALUE} is not a valid name!"
+        message: '{VALUE} is not a valid name!'
       }
     },
 
     role: {
-      ref: "Role",
+      ref: 'Role',
       type: ObjectId,
       required: true
     },
@@ -54,13 +54,13 @@
     }
   });
 
-  DocumentSchema.pre("save", function(next) {
+  DocumentSchema.pre('save', function(next) {
     var doc = this;
     doc.createdAt = date;
     next();
   });
 
-  var documents = mongoose.model("Documents", DocumentSchema);
+  var documents = mongoose.model('Documents', DocumentSchema);
   module.exports = documents;
 
 
