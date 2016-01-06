@@ -1,8 +1,8 @@
 (function() {
-  "Use strict";
+  'Use strict';
 
-  var mongoose = require("mongoose"),
-    bcrypt = require("bcrypt"),
+  var mongoose = require('mongoose'),
+    bcrypt = require('bcrypt'),
     SALT_WORK_FACTOR = 10,
     Schema = mongoose.Schema,
     ObjectId = Schema.Types.ObjectId;
@@ -16,7 +16,7 @@
           validator: function(name) {
             return /[a-zA-Z]/.test(name);
           },
-          message: "{VALUE} is not a valid name!"
+          message: '{VALUE} is not a valid name!'
         }
       },
 
@@ -27,7 +27,7 @@
           validator: function(name) {
             return /[a-zA-Z]/.test(name);
           },
-          message: "{VALUE} is not a valid name!"
+          message: '{VALUE} is not a valid name!'
         }
       }
     },
@@ -40,7 +40,7 @@
         validator: function(name) {
           return /\w/.test(name);
         },
-        message: "{VALUE} is not a valid userName!"
+        message: '{VALUE} is not a valid userName!'
       }
     },
 
@@ -52,7 +52,7 @@
         validator: function(password) {
           return /\w/.test(password);
         },
-        message: "{VALUE} is not a valid password!"
+        message: '{VALUE} is not a valid password!'
       }
     },
 
@@ -63,13 +63,13 @@
         validator: function(email) {
           return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(email);
         },
-        message: "{VALUE} is not a valid email!"
+        message: '{VALUE} is not a valid email!'
       }
     },
 
     role: {
       type: ObjectId,
-      ref: "Role",
+      ref: 'Role',
       required: true
     },
 
@@ -85,11 +85,11 @@
   });
 
   // Bcrypt middleware on UserSchema
-  UserSchema.pre("save", function(next) {
+  UserSchema.pre('save', function(next) {
     var user = this;
 
     // only hash the password if it has been modified (or is new)
-    if (!user.isModified("password")) {
+    if (!user.isModified('password')) {
       return next();
     }
 
@@ -122,7 +122,7 @@
   };
 
 
-  var User = mongoose.model("User", UserSchema);
+  var User = mongoose.model('User', UserSchema);
   module.exports = User;
 
 })();
