@@ -1,7 +1,6 @@
 (function() {
   'Use strict';
 
-
   var User = require('./../models/user.models.js'),
     Role = require('./../models/role.models.js'),
     Documents = require('./../models/document.models.js');
@@ -106,7 +105,6 @@
         } else {
           res.status(200).json(docs);
         }
-
       });
   };
 
@@ -244,5 +242,4 @@
       }
     });
   };
-
 })();
