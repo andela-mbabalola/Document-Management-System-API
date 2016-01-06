@@ -104,7 +104,6 @@
         if (err) {
           return next(err);
         }
-
         // override the cleartext password with the hashed one
         user.password = hash;
         next();
@@ -121,8 +120,6 @@
     });
   };
 
-
   var User = mongoose.model('User', UserSchema);
   module.exports = User;
-
 })();
