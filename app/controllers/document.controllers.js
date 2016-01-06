@@ -1,10 +1,10 @@
 (function() {
-  "Use strict";
+  'Use strict';
 
 
-  var User = require("./../models/user.models.js"),
-    Role = require("./../models/role.models.js"),
-    Documents = require("./../models/document.models.js");
+  var User = require('./../models/user.models.js'),
+    Role = require('./../models/role.models.js'),
+    Documents = require('./../models/document.models.js');
 
   /**
    * [function to create a document]
@@ -24,7 +24,7 @@
         if (!role) {
           res.status(404).json({
             success: false,
-            message: "Role not found. Create first!"
+            message: 'Role not found. Create first!'
           });
         } else {
           //check if user exists
@@ -38,7 +38,7 @@
               if (!user) {
                 res.status(404).json({
                   success: false,
-                  message: "User not found. Create first"
+                  message: 'User not found. Create first'
                 });
               } else {
                 //check if document already exists
@@ -50,9 +50,9 @@
                   } else {
                     //if a document is found
                     if (document) {
-                      res.status(400).json({
+                      res.status(409).json({
                         success: false,
-                        message: "Document already exists!"
+                        message: 'Document already exists!'
                       });
                     } else {
                       var newDoc = new Documents({
@@ -68,7 +68,7 @@
                         } else {
                           res.json({
                             success: true,
-                            message: "Document successfully created"
+                            message: 'Document successfully created'
                           });
                         }
                       });
@@ -101,7 +101,7 @@
         } else if (!docs) {
           res.status(404).json({
             success: false,
-            message: "No document available"
+            message: 'No document available'
           });
         } else {
           res.status(200).json(docs);
@@ -125,7 +125,7 @@
       } else if (!doc) {
         res.status(404).json({
           success: false,
-          message: "Document not found"
+          message: 'Document not found'
         });
       } else {
         res.json(doc);
@@ -154,7 +154,7 @@
         } else if (!doc) {
           res.status(404).json({
             success: false,
-            message: "Role has no document"
+            message: 'Role has no document'
           });
         } else {
           res.json(doc);
@@ -183,7 +183,7 @@
         } else if (doc.length < 1) {
           res.status(404).json({
             success: false,
-            message: "User has no document"
+            message: 'User has no document'
           });
         } else {
           res.json(doc);
@@ -208,12 +208,12 @@
         } else if (!document) {
           res.status(404).json({
             success: false,
-            message: "Document does not exist"
+            message: 'Document does not exist'
           });
         } else {
           res.json({
             success: true,
-            message: "Document Successfully updated!"
+            message: 'Document Successfully updated!'
           });
         }
       });
@@ -234,12 +234,12 @@
       } else if (!document) {
         res.status(404).json({
           success: false,
-          message: "Document not found"
+          message: 'Document not found'
         });
       } else {
         res.status(200).json({
           success: true,
-          message: "Document successfully deleted"
+          message: 'Document successfully deleted'
         });
       }
     });
