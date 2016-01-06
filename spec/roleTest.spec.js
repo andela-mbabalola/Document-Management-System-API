@@ -8,7 +8,6 @@
   'Use strict';
 
   var jwt = require('jsonwebtoken'),
-    fs = require('fs'),
     expect = require('expect.js'),
     server = require('./../server.js'),
     request = require('supertest')(server),
@@ -16,11 +15,8 @@
     role = require('./../app/models/role.models'),
     config = require('./../config/config'),
     userName = require('./../config/adminConfig').adminName,
-    userSeeders = fs.readFileSync(__dirname + '/../seeders/user.seeders.json'),
-    roleSeeders = fs.readFileSync(__dirname + '/../seeders/role.seeders.json'),
-
-    _userSeeders = JSON.parse(userSeeders),
-    _roleSeeders = JSON.parse(roleSeeders);
+    _userSeeders = require('./../seeders/user.seeders.json'),
+    _roleSeeders = require('./../seeders/role.seeders.json');
 
   describe('Roles', function() {
     describe('create role', function() {
