@@ -22,7 +22,7 @@
       } else {
         //if role is not found
         if (!role) {
-          res.status(404).json({
+          res.status(400).json({
             success: false,
             message: 'Role not found. Create first!'
           });
@@ -36,7 +36,7 @@
             } else {
               //if no user is found
               if (!user) {
-                res.status(404).json({
+                res.status(400).json({
                   success: false,
                   message: 'User not found. Create first'
                 });
@@ -123,7 +123,7 @@
         res.send(err);
         //if no document is found
       } else if (!doc) {
-        res.status(404).json({
+        res.status(400).json({
           success: false,
           message: 'Document not found'
         });
@@ -232,7 +232,7 @@
         res.send(err);
         //if no document is found
       } else if (!document) {
-        res.status(404).json({
+        res.status(400).json({
           success: false,
           message: 'Document not found'
         });
