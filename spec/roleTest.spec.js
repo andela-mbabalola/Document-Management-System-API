@@ -58,24 +58,41 @@
       });
 
       it('should deny access trying to create a SuperAdmin', function(done) {
-        var fakeAdmin;
-        request.post('/api/role/superAdministrator/' + fakeAdmin)
+        request.post('/api/role/superAdministrator/' + userName)
           .set('x-access-token', superAdToken)
           .send({
-            title: 'fakeRole'
+            title: 'superAdministrator'
           })
           .end(function(err, res) {
+            expect(res.status).to.be(403);
+            expect(res.body.success).to.eql(false);
+            expect(res.body.message).to.eql('Access denied');
+            done();
+          });
+      });
+
+      it('only SuperAdmin should create roles', function(done) {
+        var fakeAd = 'fakeSuperAd';
+        request.post('/api/role/superAdministrator/' + fakeAd)
+          .set('x-access-token', superAdToken)
+          .send({
+            title: 'newrole'
+          })
+          .end(function(err, res) {
+            expect(res.status).to.be(403);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql('Access denied!');
             done();
           });
       });
 
+
       it('should create role with valid userName', function(done) {
         request.post('/api/role/superAdministrator/' + userName)
           .set('x-access-token', superAdToken)
           .send(_roleSeeders[2])
           .end(function(err, res) {
+            expect(res.status).to.be(200);
             expect(res.body.success).to.eql(true);
             expect(res.body.message).to.eql('Role successfully created!');
             done();
@@ -87,6 +104,7 @@
           .set('x-access-token', superAdToken)
           .send(_roleSeeders[0])
           .end(function(err, res) {
+            expect(res.status).to.be(409);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql('Role already exists!');
             done();
@@ -100,7 +118,7 @@
             expect(res.status).to.be(200);
             expect(err).to.be(null);
             expect(res.body).to.not.be(undefined);
-            //expect(res.body.title).to.eql('');
+            expect(res.body.length).to.not.eql(0);
             done();
           });
       });
@@ -124,7 +142,7 @@
             title: 'Director'
           })
           .end(function(err, res) {
-            expect(res.status).to.be(200);
+            expect(res.status).to.eql(200);
             expect(res.body.success).to.eql(true);
             expect(res.body.message).to.eql('Role successfully updated');
             done();
@@ -134,15 +152,14 @@
           .set('x-access-token', superAdToken)
           .end(function(err, res) {
             expect(res.status).toBe(200);
-            expect(err).to.not.be(null);
             expect(res.body.title).to.be('Director');
             done();
           });
       });
 
-      it('should not update an invalid user', function(done) {
+      it('should not allow an invalid user update a role', function(done) {
         var id = '56617723d2e4a33738e80e4b';
-        request.put('/api//role/superAdministrator/' + id)
+        request.put('/api/role/superAdministrator/' + id)
           .set('x-access-token', superAdToken)
           .send({
             title: 'Director'
@@ -171,6 +188,18 @@
                 expect(res.body.message).to.eql('Role not found!');
                 done();
               });
+          });
+      });
+
+      it('should allow only superAdministrator delete a role', function(done) {
+        var fakeAd = 'fakeSuperAd';
+        request.delete('/api/role/superAdministrator/' + fakeAd + '/' + roleId)
+          .set('x-access-token', superAdToken)
+          .end(function(err, res) {
+            expect(res.status).to.be(403);
+            expect(res.body.success).to.eql(false);
+            expect(res.body.message).to.eql('Access denied');
+            done();
           });
       });
 
