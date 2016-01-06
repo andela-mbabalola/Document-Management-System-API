@@ -13,6 +13,7 @@ services:
   - mongodb
 install:
   - npm install
+  -npm run coverage
 script:
   - npm test
 after_success:
