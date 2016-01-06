@@ -1,7 +1,7 @@
 (function() {
-  "Use strict";
+  'Use strict';
 
-  var Role = require("./../models/role.models");
+  var Role = require('./../models/role.models');
 
   /**
    * [function to create a role]
@@ -21,7 +21,7 @@
         if (role) {
           res.json({
             success: false,
-            message: "Role already exists!"
+            message: 'Role already exists!'
           });
         } else {
           var newRole = new Role({
@@ -34,7 +34,7 @@
             } else {
               res.json({
                 success: true,
-                message: "Role successfully created!"
+                message: 'Role successfully created!'
               });
             }
           });
@@ -58,7 +58,7 @@
       } else if (roles.length === 0) {
         res.json({
           success: false,
-          message: "There are currently no roles"
+          message: 'There are currently no roles'
         });
       } else {
         res.json(roles);
@@ -79,7 +79,7 @@
       } else if (!role) {
         res.status(404).json({
           success: false,
-          message: "Role not found!"
+          message: 'Role not found!'
         });
       } else {
         res.json({
@@ -102,18 +102,18 @@
       if (err) {
         res.json({
           success: false,
-          message: "Update role failed!"
+          message: 'Update role failed!'
         });
         //if no role is found
       } else if (!role) {
         res.status(404).json({
           success: false,
-          message: "Role not found"
+          message: 'Role not found'
         });
       } else {
         res.json({
           success: true,
-          message: "Role successfully updated"
+          message: 'Role successfully updated'
         });
       }
     });
@@ -131,18 +131,18 @@
       if (err) {
         res.json({
           success: false,
-          message: "Delete role failed"
+          message: 'Delete role failed'
         });
         //if no role is found
       } else if (!role) {
         res.status(404).json({
           success: false,
-          message: "Role does not exist!"
+          message: 'Role does not exist!'
         });
       } else {
         res.json({
           success: true,
-          message: "Role successfully deleted"
+          message: 'Role successfully deleted'
         });
       }
     });
