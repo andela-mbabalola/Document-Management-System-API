@@ -1,8 +1,8 @@
 /****************************************************************
-*Name: DMS API Test.
-*Description: To test the document's segment of the DMS API
-*Author: Babalola Maryam
-*****************************************************************/
+ *Name: DMS API Test.
+ *Description: To test the document's segment of the DMS API
+ *Author: Babalola Maryam
+ *****************************************************************/
 
 (function() {
   'Use strict';
@@ -126,7 +126,6 @@
             done();
           });
       });
-
     });
 
     describe('Performing CRUD operations', function() {
@@ -194,7 +193,7 @@
       });
 
       it('should return a limited document', function(done) {
-        request.get('/api/documents/limit/' + limit)
+        request.get('/api/documents?limit=' + limit)
           .set('x-access-token', userToken)
           .expect(200)
           .end(function(err, res) {
@@ -385,9 +384,6 @@
             done();
           });
       });
-
     });
-
   });
-
 })();
