@@ -70,7 +70,7 @@
       }
       //if role does not exist
       if (!role) {
-        res.status(404).json({
+        res.status(400).json({
           success: false,
           message: 'Role not found. Create first'
         });
@@ -212,7 +212,7 @@
         res.send(err);
         //if role is not found
       } else if (!role) {
-        res.status(404).json({
+        res.status(400).json({
           success: false,
           message: 'Role does not exist, create first'
         });
