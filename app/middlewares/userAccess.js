@@ -17,7 +17,6 @@
       if (err) {
         res.send(err);
       } else if (!doc) {
-        console.log('test' , doc);
         res.status(404).json({
           success: false,
           message: 'Docs not found'
