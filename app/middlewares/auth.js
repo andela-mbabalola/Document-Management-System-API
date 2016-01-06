@@ -50,7 +50,7 @@
   exports.verifyAdmin = function(req, res, next) {
     //checking if the user is an admin
     if (req.params.userName !== adminConfig.adminName) {
-      res.json({
+      res.status(403).json({
         success: false,
         message: 'Access denied!'
       });
