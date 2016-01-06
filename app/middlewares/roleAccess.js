@@ -11,7 +11,6 @@
    * @param  {Function} next [pass control to the next handler]
    * @return {[json]}        [message that permission has been denied]
    */
-
   exports.roleAccess = function(req, res, next) {
     //check if the role equals that of the superAdministrator
     if (req.body.title === config.role) {
@@ -31,7 +30,6 @@
    * @param  {Function} next [pass control to the next handler]
    * @return {[json]}        [message that permission has been denied]
    */
-
   exports.roleAuth = function(req, res, next) {
     Role.findOne(req.params.id, function(err, role) {
       if (err) {
@@ -52,8 +50,6 @@
           next();
         }
       }
-
     });
   };
-
 })();
