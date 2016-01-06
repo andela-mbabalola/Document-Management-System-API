@@ -79,8 +79,9 @@
         request.post('/api/documents')
           .set('x-access-token', userToken)
           .send(_docSeeders[1])
+          .expect(409)
           .end(function(err, res) {
-            expect(res.status).to.be(400);
+            expect(res.status).to.be(409);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql('Document already exists!');
             done();
@@ -90,6 +91,7 @@
       it('should not create document for unauthenticated user', function(done) {
         request.post('/api/documents/')
           .send(_docSeeders[0])
+          .expect(403)
           .end(function(err, res) {
             expect(res.status).to.be(403);
             expect(res.body.success).to.eql(false);
@@ -106,6 +108,7 @@
             content: _docSeeders[1].content,
             role: ''
           })
+          .expect(404)
           .end(function(err, res) {
             expect(res.status).to.be(404);
             expect(res.body.success).to.eql(false);
@@ -120,6 +123,7 @@
         request.post('/api/documents')
           .set('x-access-token', userToken)
           .send(_docSeeders[2])
+          .expect(200)
           .end(function(err, res) {
             expect(res.status).to.be(200);
             expect(res.body.success).to.eql(true);
