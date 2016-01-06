@@ -19,7 +19,7 @@
       } else {
         //if role exists
         if (role) {
-          res.json({
+          res.status(409).json({
             success: false,
             message: 'Role already exists!'
           });
