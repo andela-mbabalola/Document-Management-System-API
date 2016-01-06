@@ -2,12 +2,10 @@
   'Use strict';
 
   var mongoose = require('mongoose'),
-    date = require('./../helpers/dateHelper'),
     Schema = mongoose.Schema,
     ObjectId = Schema.Types.ObjectId;
 
   var DocumentSchema = new Schema({
-
     ownerId: {
       ref: 'User',
       type: ObjectId,
@@ -54,14 +52,6 @@
     }
   });
 
-  DocumentSchema.pre('save', function(next) {
-    var doc = this;
-    doc.createdAt = date;
-    next();
-  });
-
   var documents = mongoose.model('Documents', DocumentSchema);
   module.exports = documents;
-
-
 })();
