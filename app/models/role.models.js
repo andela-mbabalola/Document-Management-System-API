@@ -26,8 +26,6 @@
       default: Date.now
     }
   });
-
   var Role = mongoose.model('Role', RoleSchema);
   module.exports = Role;
-
 })();
