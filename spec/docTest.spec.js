@@ -8,7 +8,6 @@
   'Use strict';
 
   var jwt = require('jsonwebtoken'),
-    fs = require('fs'),
     expect = require('expect.js'),
     server = require('./../server.js'),
     request = require('supertest')(server),
@@ -16,13 +15,9 @@
     role = require('./../app/models/role.models'),
     Docs = require('./../app/models/document.models'),
     config = require('./../config/config'),
-    userSeeders = fs.readFileSync(__dirname + '/../seeders/user.seeders.json'),
-    roleSeeders = fs.readFileSync(__dirname + '/../seeders/role.seeders.json'),
-  docSeeders = fs.readFileSync(__dirname + '/../seeders/document.seeders.json'),
-
-    _userSeeders = JSON.parse(userSeeders),
-    _roleSeeders = JSON.parse(roleSeeders),
-    _docSeeders = JSON.parse(docSeeders);
+    _userSeeders = require('./../seeders/user.seeders.json'),
+    _roleSeeders = require('./../seeders/role.seeders.json'),
+    _docSeeders = require('./../seeders/document.seeders.json');
 
   describe('Documents', function() {
     describe('Creating document(s)', function() {
@@ -100,7 +95,7 @@
           });
       });
 
-      it('should not create user without role', function(done) {
+      it('should not create doc without role', function(done) {
         request.post('/api/documents')
           .set('x-access-token', userToken)
           .send({
@@ -108,9 +103,9 @@
             content: _docSeeders[1].content,
             role: ''
           })
-          .expect(404)
+          .expect(400)
           .end(function(err, res) {
-            expect(res.status).to.be(404);
+            expect(res.status).to.be(400);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql('Role not found. Create first!');
           });
@@ -242,7 +237,7 @@
         var newdoc = new Docs(_docSeeders[0]);
         newdoc.save();
 
-        request.get('/api/documents/user/' + doc_user)
+        request.get('/api/user/' + doc_user + '/documents/')
           .set('x-access-token', userToken)
           .expect(200)
           .end(function(err, res) {
@@ -256,7 +251,7 @@
 
       it('should verify user is valid', function(done) {
         var id = '568831c53ff90b4456491b50';
-        request.get('/api/documents/user/' + id)
+        request.get('/api/user/' + id + '/documents/')
           .set('x-access-token', userToken)
           .expect(404)
           .end(function(err, res) {
@@ -283,9 +278,9 @@
         var id = '568831c53ff90b4456491b50';
         request.get('/api/documents/' + id)
           .set('x-access-token', userToken)
-          .expect(404)
+          .expect(400)
           .end(function(err, res) {
-            expect(res.status).to.be(404);
+            expect(res.status).to.be(400);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql('Document not found');
             done();
@@ -365,9 +360,9 @@
         var id = '568831c53ff90b4456491b50';
         request.delete('/api/documents/' + id)
           .set('x-access-token', userToken)
-          .expect(404)
+          .expect(400)
           .end(function(err, res) {
-            expect(res.status).to.eql(404);
+            expect(res.status).to.eql(400);
             expect(res.body.success).to.eql(false);
             expect(res.body.message).to.eql('Document not found');
             done();
