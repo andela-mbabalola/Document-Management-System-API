@@ -1,14 +1,14 @@
 (function() {
-  "Use strict";
+  'Use strict';
 
-  var express = require("express"),
+  var express = require('express'),
     //creating an instance of express
     app = express(),
 
-    bodyParser = require("body-parser"),
-    morgan = require("morgan"),
-    methodOverride = require("method-override"),
-    routes = require("./../app/routes/index"),
+    bodyParser = require('body-parser'),
+    morgan = require('morgan'),
+    methodOverride = require('method-override'),
+    routes = require('./../app/routes/index'),
 
   //mounting an instance of the express router on the routes
   router = express.Router();
@@ -19,18 +19,18 @@
   app.use(bodyParser.urlencoded({
     extended: true
   }));
-  app.use(morgan("dev"));
+  app.use(morgan('dev'));
 
   //creating a test route
-  app.get("/", function(req, res) {
+  app.get('/', function(req, res) {
     res.send({
-      text: "You have successfully reached the test route",
+      text: 'You have successfully reached the test route',
       code: 200
     });
   });
 
   //mounting the router on a /api directory
-  app.use("/api", router);
+  app.use('/api', router);
 
   //exporting app
   module.exports = app;
