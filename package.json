@@ -4,7 +4,7 @@
   "description": "RESTful API to implement a document management system",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --captureExceptions --verbose --growl spec/userTest.spec.js",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha spec/index.js --colors",
     "start": "nodemon server.js"
   },
   "repository": {
@@ -26,6 +26,7 @@
     "expect.js": "^0.3.1",
     "express": "^4.13.3",
     "fs": "0.0.2",
+    "istanbul": "^0.4.1",
     "jasmine-node": "^1.14.5",
     "jsonwebtoken": "^5.5.4",
     "method-override": "^2.3.5",
