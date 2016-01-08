@@ -47,7 +47,6 @@
               success: false,
               message: 'Authentication failed. Wrong password'
             });
-
           }
         }
       }
