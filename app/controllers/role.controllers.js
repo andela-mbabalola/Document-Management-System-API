@@ -32,7 +32,7 @@
             if (err) {
               res.send(err);
             } else {
-              res.json({
+              res.status(200).json({
                 success: true,
                 message: 'Role successfully created!'
               });
@@ -56,12 +56,12 @@
         res.send(err);
         //if no role is found
       } else if (roles.length === 0) {
-        res.json({
+        res.status(404).json({
           success: false,
           message: 'There are currently no roles'
         });
       } else {
-        res.json(roles);
+        res.status(200).json(roles);
       }
     });
   };
@@ -82,7 +82,7 @@
           message: 'Role not found!'
         });
       } else {
-        res.json({
+        res.status(200).json({
           success: true,
           message: role
         });
@@ -111,7 +111,7 @@
           message: 'Role not found'
         });
       } else {
-        res.json({
+        res.status(200).json({
           success: true,
           message: 'Role successfully updated'
         });
@@ -140,7 +140,7 @@
           message: 'Role does not exist!'
         });
       } else {
-        res.json({
+        res.status(200).json({
           success: true,
           message: 'Role successfully deleted'
         });
