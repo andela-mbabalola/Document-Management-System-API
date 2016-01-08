@@ -65,7 +65,7 @@
                         if (err) {
                           res.send(err);
                         } else {
-                          res.json({
+                          res.status(200).json({
                             success: true,
                             message: 'Document successfully created'
                           });
@@ -126,7 +126,7 @@
           message: 'Document not found'
         });
       } else {
-        res.json(doc);
+        res.status(200).json(doc);
       }
     });
   };
@@ -155,7 +155,7 @@
             message: 'Role has no document'
           });
         } else {
-          res.json(doc);
+          res.status(200).json(doc);
         }
       });
   };
@@ -184,7 +184,7 @@
             message: 'User has no document'
           });
         } else {
-          res.json(doc);
+          res.status(200).json(doc);
         }
       });
   };
@@ -209,7 +209,7 @@
             message: 'Document does not exist'
           });
         } else {
-          res.json({
+          res.status(200).json({
             success: true,
             message: 'Document Successfully updated!'
           });
