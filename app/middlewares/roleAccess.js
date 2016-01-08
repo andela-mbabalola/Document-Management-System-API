@@ -40,7 +40,6 @@
           message: 'Role not found'
         });
       } else {
-        console.log(req.decoded);
         if (role.title !== config.role) {
           res.status(403).json({
             success: false,
