@@ -284,7 +284,7 @@
           message: 'Documents not found'
         });
       } else {
-        res.json(docs);
+        res.status(200).json(docs);
       }
     });
   };
