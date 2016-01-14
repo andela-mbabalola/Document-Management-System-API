@@ -36,8 +36,8 @@
 
     //router to edit and delete a document with a specific Id
     router.route('/documents/:id')
-      .put(auth.authMiddleware, documentController.editDocument)
-      .delete(auth.authMiddleware, documentController.deleteDocument);
+      .put(auth.authMiddleware, userAccess.userAccess, documentController.editDocument)
+      .delete(auth.authMiddleware, userAccess.userAccess, documentController.deleteDocument);
 
     router.route('/documents/title/:title/:id')
       .put(auth.authMiddleware, userAccess.userAccess,
