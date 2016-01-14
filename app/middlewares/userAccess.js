@@ -22,6 +22,7 @@
           message: 'Docs not found'
         });
       } else {
+        console.log('here' + req.decoded._id);
         if (req.decoded._id !== doc.ownerId.toString() &&
           req.decoded.role !== config.role &&
           req.decoded.role !== doc.role.toString()) {
