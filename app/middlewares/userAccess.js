@@ -13,6 +13,7 @@
    */
 
   exports.userAccess = function(req, res, next) {
+    console.log(req.decoded);
     documents.findOne(req.params.id, function(err, doc) {
       if (err) {
         res.send(err);
