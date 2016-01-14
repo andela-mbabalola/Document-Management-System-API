@@ -32,7 +32,7 @@
       .get(auth.authMiddleware, documentController.getADocument);
 
     //mounting the userAccess middleware
-    router.all('/*', userAccess.userAccess);
+    //router.all('/*', userAccess.userAccess);
 
     //router to edit and delete a document with a specific Id
     router.route('/documents/:id')
