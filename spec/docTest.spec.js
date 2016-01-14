@@ -342,7 +342,72 @@
             done();
           });
       });
+    });
 
+
+
+    describe('', function() {
+      var userToken,
+        doc_role,
+        doc_user,
+        doc_id,
+        title;
+      beforeEach(function(done) {
+        //creating a role using the content of the role seeder
+        role.create(_roleSeeders[2]).then(function(Role) {
+          //creating a user using the content of the user seeder
+          _userSeeders[2].role = Role._id;
+          User.create(_userSeeders[2]).then(function(users) {
+            userToken = jwt.sign(users, config.secret, {
+              expiresInMinutes: 1440
+            });
+
+            //assigning the role and ownerId of _docSeeders[2] to an Id
+            _docSeeders[2].role = Role._id;
+            _docSeeders[2].ownerId = users._id;
+
+            //assigning the role and ownerId of _docSeeders[0] to an Id
+            _docSeeders[0].ownerId = users._id;
+            _docSeeders[0].role = Role._id;
+
+            doc_role = Role._id;
+            doc_user = users._id;
+            //creating a document using the content of the document seeder
+            Docs.create(_docSeeders[2]).then(function(doc) {
+              doc_id = doc._id;
+              title = doc.title;
+              done();
+            }, function(err) {
+              if (err) {
+                console.log(err);
+                done();
+              }
+            });
+          }, function(err) {
+            console.log(err);
+            done();
+          });
+        }, function(err) {
+          console.log(err);
+          done();
+        });
+      });
+
+      afterEach(function(done) {
+        //deleting the document created
+        Docs.remove({}).exec(function() {
+          //deleting the user created
+          User.remove({}).exec(function() {
+            //deleting the role created
+            role.remove({}).exec(function(err) {
+              if (err) {
+                console.log(err);
+              }
+              done();
+            });
+          });
+        });
+      });
       it('should delete document by id', function(done) {
         request.delete('/api/documents/' + doc_id)
           .set('x-access-token', userToken)
@@ -384,6 +449,6 @@
             done();
           });
       });
+      });
     });
-  });
 })();
