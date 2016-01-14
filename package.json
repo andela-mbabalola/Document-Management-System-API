@@ -1,0 +1,42 @@
+{
+  "name": "rest-api",
+  "version": "1.0.0",
+  "description": "RESTful API to implement a document management system",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha spec/index.js --colors",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andela-mbabalola"
+  },
+  "keywords": [
+    "Rest-Api",
+    "Express",
+    "jwt",
+    "Mongoose"
+  ],
+  "author": "Babalola Maryam",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "body-parser": "^1.14.1",
+    "cookie-parser": "^1.4.0",
+    "coveralls": "^2.11.6",
+    "expect.js": "^0.3.1",
+    "express": "^4.13.3",
+    "fs": "0.0.2",
+    "istanbul": "^0.4.1",
+    "jasmine-node": "^1.14.5",
+    "jsonwebtoken": "^5.5.4",
+    "method-override": "^2.3.5",
+    "mongoose": "^4.3.4",
+    "morgan": "^1.6.1",
+    "supertest": "^1.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.4",
+    "supertest": "^1.1.0"
+  }
+}

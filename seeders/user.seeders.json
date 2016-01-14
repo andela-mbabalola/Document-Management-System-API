@@ -1,0 +1,28 @@
+  [{
+    "name": {
+      "firstName": "Rowland",
+      "lastName": "Ekemezie"
+    },
+    "userName": "Erow",
+    "role": "Administrator",
+    "email": "rowland@gmail.com",
+    "password": "almighty"
+  }, {
+    "name": {
+      "firstName": "Emmanuel",
+      "lastName": "Akinyele"
+    },
+    "userName": "Emmy",
+    "email": "emma@gmail.com",
+    "password": "emma_akin",
+    "role": "Manager"
+  }, {
+    "name": {
+      "firstName": "Bolutife",
+      "lastName": "Lawrence"
+    },
+    "userName": "Bolu",
+    "email": "bolu@gmail.com",
+    "password": "elaw",
+    "role": "Supervisor"
+  }]
