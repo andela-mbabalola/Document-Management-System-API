@@ -23,9 +23,9 @@
         });
       } else {
         console.log('here' + req.decoded._id);
-        if (req.decoded._id !== doc.ownerId.toString() &&
-          req.decoded.role !== config.role &&
-          req.decoded.role !== doc.role.toString()) {
+        if (req.decoded._doc._id !== doc.ownerId.toString() &&
+          req.decoded._doc.role !== config.role &&
+          req.decoded._doc.role !== doc.role.toString()) {
           res.status(403).json({
             success: false,
             message: 'Access denied'
