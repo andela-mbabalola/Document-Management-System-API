@@ -15,7 +15,7 @@ install:
   - npm install
   - npm install coveralls
 script:
-  - npm spec
+  - mocha spec/*
 after_success:
   - npm run coveralls
 sudo: false
